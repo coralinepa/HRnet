@@ -1,14 +1,11 @@
-import PropTypes from "prop-types";
 import styled from "styled-components";
-
-import { Cross1Icon } from "@radix-ui/react-icons";
 
 const buttonStyles = `
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  font-weight: 700;
-  font-size: 12px;;
+  font-weight: 300;
+  font-size: 12px;
   text-transform: uppercase;
   cursor: pointer;
   outline: none;
@@ -33,18 +30,4 @@ const Button = styled.button`
 
 Button.displayName = "Button";
 
-const ButtonIcon = ({ name, width = "8px", ...rest }) => {
-  return (
-    <Button {...rest}>
-      <Cross1Icon name={name} width={width} />
-    </Button>
-  );
-};
-
-ButtonIcon.propTypes = {
-  name: PropTypes.string,
-  width: PropTypes.string,
-};
-
-export { ButtonIcon };
 export default Button;

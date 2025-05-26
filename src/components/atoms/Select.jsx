@@ -3,14 +3,10 @@ import ReactSelect, { components } from "react-select";
 
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 
-const ChevronDown = styled(ChevronDownIcon)`
-  transition: transform 0.3s ease;
-`;
-
 const selectStyles = `
-  border-bottom: 1px solid #D8D4D0);
+  border: 1px solid #BFC5C5;
   min-height: 25px;
-
+  padding: 5px 8px 4px;
   &.react-select--is-disabled {
     opacity: 0.6;
   }
@@ -22,11 +18,7 @@ const selectStyles = `
 
 .react-select__value-container {
     font-size:  12px;
-
     color: #5D6069;
-   
-    border: 1px solid #BFC5C5;
-    padding: 5px 8px 4px;
     width: 100%;
   }
 
@@ -76,6 +68,7 @@ const selectStyles = `
     color: #5d6069;
 }
     }
+
 .react-select__dropdown-indicator > span {
   display: flex;
   cursor: pointer;
@@ -83,17 +76,9 @@ const selectStyles = `
   justify-content: center;
   height: 100%;
   margin-left: 6px;
+
 }
 
-.react-select__clear-indicator > span {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  position: relative; 
-  margin-left: 8px;
-}
 
 `;
 
@@ -104,7 +89,7 @@ const StyledSelect = styled(ReactSelect)`
 function DropdownIndicator(props) {
   return (
     <components.DropdownIndicator {...props}>
-      <ChevronDown width="6px" color="#D8D4D0" />
+      <ChevronDownIcon style={{ color: "#5d6069", width: 16, height: 16 }} />
     </components.DropdownIndicator>
   );
 }
@@ -114,9 +99,7 @@ const Select = ({ ...props }) => {
     <StyledSelect
       escapeClearsValue={false}
       controlShouldRenderValue={true}
-      components={{
-        DropdownIndicator,
-      }}
+      components={{ DropdownIndicator }}
       unstyled
       className="react-select-container"
       classNamePrefix="react-select"

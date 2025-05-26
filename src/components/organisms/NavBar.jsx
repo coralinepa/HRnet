@@ -6,16 +6,20 @@ const NavList = styled.ul`
   display: flex;
   justify-content: space-between;
   list-style-type: none;
+  text-decoration: none;
   gap: 10px;
 `;
 
 const NavListItem = styled.li`
-  color: #5d6069;
   text-transform: uppercase;
-  text-decoration: none;
-  & a.active {
+  font-size: 13px;
+  a {
     color: #5d6069;
-    font-weight: 300;
+    text-decoration: none;
+
+    &.active {
+      font-weight: 500;
+    }
   }
 `;
 

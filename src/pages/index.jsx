@@ -1,4 +1,4 @@
-import Home from "./Home";
+import Home from "./EmployeeCreate";
 import EmployeeList from "./EmployeeList";
 
 export { Home, EmployeeList };

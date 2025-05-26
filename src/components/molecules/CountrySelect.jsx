@@ -1,5 +1,6 @@
-import { useState } from "react";
-import Select from "../components/ui/Select";
+import PropTypes from "prop-types";
+
+import { Select } from "../atoms";
 
 const countryOptions = [
   { value: "AF", label: "Afghanistan" },
@@ -97,19 +98,20 @@ const countryOptions = [
   { value: "ZW", label: "Zimbabwe" },
 ];
 
-function CountrySelect() {
-  const [selectedCountry, setSelectedCountry] = useState(null);
-
+function CountrySelect({ value, onChange }) {
+  const selectedOption = countryOptions.find((opt) => opt.label === value);
   return (
-    <div>
-      <Select
-        options={countryOptions}
-        value={selectedCountry}
-        onChange={setSelectedCountry}
-        placeholder="Select a country"
-      />
-    </div>
+    <Select
+      options={countryOptions}
+      value={selectedOption || null}
+      onChange={(selected) => onChange(selected?.label || "")}
+      placeholder="Select a country"
+    />
   );
 }
 
+CountrySelect.propTypes = {
+  value: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+};
 export default CountrySelect;

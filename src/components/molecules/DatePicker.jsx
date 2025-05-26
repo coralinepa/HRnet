@@ -3,9 +3,8 @@ import PropTypes from "prop-types";
 import { format } from "date-fns";
 import { CalendarIcon } from "@radix-ui/react-icons";
 
-import Popover from "./Popover";
-import Input from "./Form/Input";
-import Calendar from "./Calendar";
+import { Input, Calendar } from "../atoms";
+import { Popover } from "../molecules";
 
 const InputWrapper = styled.div`
   position: relative;
