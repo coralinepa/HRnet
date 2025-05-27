@@ -1,8 +1,53 @@
-# React + Vite
+# HRnet
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**HRnet** est une application web permettant de gérer les employés d'une entreprise via une interface moderne construite avec React et Vite.
 
-Currently, two official plugins are available:
+## ✨ Fonctionnalités
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Ajout d’un nouvel employé via un formulaire
+- Liste des employés existants
+- Recherche, tri et pagination
+- Stockage local des données
+- Interface utilisateur fluide et réactive
+
+## 🛠️ Technologies utilisées
+
+- [React]
+- [Vite]
+- [ESLint]
+- [JavaScript]
+- [HTML/CSS]
+
+## 🚀 Installation
+
+````bash
+# Clone le dépôt
+git clone https://github.com/coralinepa/HRnet.git
+
+# Va dans le dossier du projet
+cd HRnet
+
+# Installe les dépendances
+yarn install
+
+# Lance le projet en développement
+```bash
+yarn run dev
+
+# Build pour la production
+```bash
+yarn build
+
+### Structure du projet
+
+HRnet/
+├── public/             # Fichiers statiques
+├── src/                # Code source React
+├── index.html          # Entrée HTML principale
+├── vite.config.js      # Configuration Vite
+└── package.json        # Dépendances et scripts
+
+### Auteur
+Projet développé par Coraline Parreau
+
+````
