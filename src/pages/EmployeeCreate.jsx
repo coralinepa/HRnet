@@ -1,20 +1,35 @@
-import PropTypes from "prop-types";
-
-import { useSubmit } from "react-router";
-import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
+import { useForm, Controller } from "react-hook-form";
+import { Modal } from "@coralinepa/react-modal";
 
-import Button from "../components/ui/Button";
-import { Legend, Input, Label, Card, Box } from "../components/ui/Form";
-import Panel from "../components/ui/Panel";
-import DatePicker from "../components/ui/DatePicker";
-import CountrySelect from "./CountrySelect";
-import DepartmentSelect from "./DepartmentSelect";
-import Modal from "../components/ui/Modal";
+import { useEmployees } from "../hooks/useEmployees";
+
+import {
+  Card,
+  Label,
+  Input,
+  Legend,
+  Button,
+  Fieldset,
+} from "../components/atoms";
+
+import {
+  DatePicker,
+  CountrySelect,
+  DepartmentSelect,
+} from "../components/molecules";
+import { Panel } from "../components/organisms";
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
 
 function Home() {
-  const submit = useSubmit();
-
+  const { addEmployee } = useEmployees();
   const { register, watch, handleSubmit, control, setValue } = useForm({
     defaultValues: {
       firstName: "",
@@ -32,8 +47,11 @@ function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleCreate = (values) => {
-    console.log(values);
-    submit(values, { method: "post", encType: "application/json" });
+    addEmployee({
+      ...values,
+      startDate: values.startDate?.toISOString().split("T")[0],
+      birthDate: values.birthDate?.toISOString().split("T")[0],
+    });
     setIsModalOpen(true);
   };
 
@@ -43,15 +61,15 @@ function Home() {
 
   return (
     <Panel>
-      <form onSubmit={handleSubmit(handleCreate)}>
+      <Form onSubmit={handleSubmit(handleCreate)}>
         <Card>
           <Label htmlFor="firstName">First Name</Label>
           <Input
             {...register("firstName")}
             id="firstName"
-            name="firstName"
             placeholder="First Name"
             autoComplete="off"
+            required
           />
         </Card>
         <Card>
@@ -59,9 +77,9 @@ function Home() {
           <Input
             {...register("lastName")}
             id="lastName"
-            name="lastName"
             placeholder="Last Name"
             autoComplete="off"
+            required
           />
         </Card>
         <Card>
@@ -75,6 +93,7 @@ function Home() {
                 title="Select Date of Birth"
                 selected={field.value}
                 onChange={(date) => setValue("birthDate", date)}
+                required
               />
             )}
           />
@@ -90,20 +109,21 @@ function Home() {
                 title="Select Start Date"
                 selected={field.value}
                 onChange={(date) => setValue("startDate", date)}
+                required
               />
             )}
           />
         </Card>
-        <Box>
+        <Fieldset>
           <Legend>Address</Legend>
           <Card>
             <Label htmlFor="street">Street</Label>
             <Input
               {...register("street")}
               id="street"
-              name="street"
               placeholder="Street"
               autoComplete="off"
+              required
             />
           </Card>
           <Card>
@@ -111,9 +131,9 @@ function Home() {
             <Input
               {...register("city")}
               id="city"
-              name="city"
               placeholder="City"
               autoComplete="off"
+              required
             />
           </Card>
           <Card>
@@ -121,6 +141,7 @@ function Home() {
             <CountrySelect
               value={watch("state")}
               onChange={(value) => setValue("state", value)}
+              required
             />
           </Card>
           <Card>
@@ -128,20 +149,20 @@ function Home() {
             <Input
               {...register("zipCode")}
               id="zipCode"
-              name="zipCode"
-              type="number"
               placeholder="Zip Code"
               autoComplete="off"
+              required
             />
           </Card>
-          <Card>
-            <Label htmlFor="department">Department</Label>
-            <DepartmentSelect
-              value={watch("department")}
-              onChange={(value) => setValue("department", value)}
-            />
-          </Card>
-        </Box>
+        </Fieldset>
+        <Card>
+          <Label htmlFor="department">Department</Label>
+          <DepartmentSelect
+            value={watch("department")}
+            onChange={(value) => setValue("department", value)}
+            required
+          />
+        </Card>
         <div
           style={{
             display: "flex",
@@ -152,11 +173,10 @@ function Home() {
         >
           <Button type="submit">Save</Button>
         </div>
-      </form>
+      </Form>
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-        <h2>Form Saved Successfully!</h2>
-        <Button onClick={handleCloseModal}>Close</Button>
+        <h2>Employee created.</h2>
       </Modal>
     </Panel>
   );

@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
-import { useLoaderData } from "react-router";
+import { useState, useMemo } from "react";
+import PropTypes from "prop-types";
+import { useEmployees } from "../hooks/useEmployees";
 import styled from "styled-components";
 
 import {
@@ -8,15 +9,16 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 
-import Panel from "../components/ui/Panel";
-import { Label, Search } from "../components/ui/Form";
+import { Panel } from "../components/organisms";
+import { Label, Input, Button } from "../components/atoms";
+import { Search } from "../components/molecules";
 
 const TableWrapper = styled.div`
   overflow-x: auto;
-  margin-top: 1rem;
 `;
 
 const Table = styled.table`
@@ -44,7 +46,6 @@ const Header = styled.thead`
     }
   }
 `;
-
 const Body = styled.tbody`
   tr {
     font-size: 12px;
@@ -60,110 +61,155 @@ const Body = styled.tbody`
     padding: 6px 8px;
   }
 `;
-
 const Select = styled.select`
   padding: 5px 8px;
+  padding-right: 2px;
   border-radius: 4px;
   border: 1px solid #ccc;
-  background-color: white;
-  font-size: 14px;
+  background-color: #dfe4e4;
+  font-size: 12px;
 `;
-
 const Flex = styled.div`
   display: flex;
-  justify-content: ${({ justify }) => justify || "space-between"};
+  justify-content: space-between;
   align-items: center;
-  gap: ${({ gap }) => gap || "0"};
+  gap: 10px;
   margin-top: 1rem;
 `;
 
-const Button = styled.button`
-  padding: 6px 12px;
-  margin: 0 2px;
-  border: none;
-  border-radius: 6px;
-  background-color: ${(props) => (props.disabled ? "#ccc" : "#5b9bd5")};
-  color: white;
-  font-weight: 500;
-  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
-  transition: background-color 0.2s ease;
+const SortIcon = ({ isSorted }) => {
+  return (
+    <div
+      style={{
+        marginLeft: 4,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <span style={{ color: isSorted === "asc" ? "#000" : "#ccc" }}>▲</span>
+      <span style={{ color: isSorted === "desc" ? "#000" : "#ccc" }}>▼</span>
+    </div>
+  );
+};
 
-  &:hover {
-    background-color: ${(props) => (props.disabled ? "#ccc" : "#407ec9")};
-  }
-`;
+SortIcon.propTypes = {
+  isSorted: PropTypes.object,
+};
 
 function EmployeeList() {
-  const data = useLoaderData();
+  const { employees: data } = useEmployees();
+  const [columnFilters, setColumnFilters] = useState([]);
+  const [globalFilter, setGlobalFilter] = useState("");
+  const [sorting, setSorting] = useState([]);
+  const [pageSize, setPageSize] = useState(10);
   const columnHelper = createColumnHelper();
 
-  const [globalFilter, setGlobalFilter] = useState("");
-  const [pageSize, setPageSize] = useState(10);
-
-  const columns = useMemo(
-    () => [
+  const columns = useMemo(() => {
+    return [
       columnHelper.accessor("firstName", {
         header: "First Name",
+        enableSorting: true,
+        enableColumnFilter: true,
         cell: (info) => info.getValue(),
       }),
       columnHelper.accessor("lastName", {
         header: "Last Name",
+        enableSorting: true,
+        enableColumnFilter: true,
         cell: (info) => info.getValue(),
       }),
       columnHelper.accessor("startDate", {
         header: "Start Date",
+        enableSorting: true,
+        enableColumnFilter: true,
         cell: (info) => info.getValue(),
       }),
       columnHelper.accessor("department", {
         header: "Department",
+        enableSorting: true,
+        enableColumnFilter: true,
         cell: (info) => info.getValue(),
       }),
-      columnHelper.accessor("dateOfBirth", {
+      columnHelper.accessor("birthDate", {
         header: "Date of Birth",
+        enableSorting: true,
+        enableColumnFilter: true,
         cell: (info) => info.getValue(),
       }),
       columnHelper.accessor("street", {
         header: "Street",
+        enableSorting: true,
+        enableColumnFilter: true,
         cell: (info) => info.getValue(),
       }),
       columnHelper.accessor("city", {
         header: "City",
+        enableSorting: true,
+        enableColumnFilter: true,
         cell: (info) => info.getValue(),
       }),
-      columnHelper.accessor("State", {
+      columnHelper.accessor("state", {
         header: "State",
+        enableSorting: true,
+        enableColumnFilter: true,
         cell: (info) => info.getValue(),
       }),
       columnHelper.accessor("zipCode", {
         header: "Zip Code",
+        enableSorting: true,
+        enableColumnFilter: true,
         cell: (info) => info.getValue(),
       }),
-    ],
-    [columnHelper]
-  );
+      columnHelper.display({
+        id: "select",
+        header: () => (
+          <Input
+            type="checkbox"
+            checked={table.getIsAllRowsSelected()}
+            onChange={table.getToggleAllRowsSelectedHandler()}
+          />
+        ),
+        cell: ({ row }) => (
+          <Input
+            type="checkbox"
+            checked={row.getIsSelected()}
+            disabled={!row.getCanSelect()}
+            onChange={row.getToggleSelectedHandler()}
+          />
+        ),
+      }),
+    ];
+  }, [columnHelper]);
 
   const table = useReactTable({
     data,
     columns,
     state: {
+      columnFilters,
       globalFilter,
+      sorting,
       pagination: {
         pageSize,
         pageIndex: 0,
       },
+      rowSelection: {},
     },
-    onGlobalFilterChange: setGlobalFilter,
+    onColumnFiltersChange: setColumnFilters,
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    enableRowSelection: true,
   });
 
   return (
     <Panel>
       <>
-        <Flex>
-          <Flex gap="10px">
-            Show{" "}
+        <Flex style={{ marginBottom: "4px" }}>
+          <Flex>
+            Show
             <Select
               value={pageSize}
               onChange={(e) => {
@@ -177,14 +223,12 @@ function EmployeeList() {
                   {size}
                 </option>
               ))}
-            </Select>{" "}
+            </Select>
             entries
           </Flex>
 
           <Search
-            type="text"
-            placeholder="Search..."
-            value={globalFilter ?? ""}
+            value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
           />
         </Flex>
@@ -195,13 +239,31 @@ function EmployeeList() {
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <th key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                    <th
+                      key={header.id}
+                      onClick={header.column.getToggleSortingHandler()}
+                      style={{
+                        cursor: header.column.getCanSort()
+                          ? "pointer"
+                          : "default",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: "4px",
+                        }}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {header.column.getCanSort() && (
+                          <SortIcon isSorted={header.column.getIsSorted()} />
+                        )}
+                      </div>
                     </th>
                   ))}
                 </tr>
@@ -228,13 +290,20 @@ function EmployeeList() {
           <span>
             Showing{" "}
             <strong>
-              {table.getState().pagination.pageIndex + 1} of{" "}
-              {table.getPageCount()}
-            </strong>{" "}
-            entries
+              {table.getRowModel().rows.length > 0
+                ? table.getState().pagination.pageIndex *
+                    table.getState().pagination.pageSize +
+                  1
+                : 0}{" "}
+              to{" "}
+              {table.getState().pagination.pageIndex *
+                table.getState().pagination.pageSize +
+                table.getRowModel().rows.length}{" "}
+              of {table.getFilteredRowModel().rows.length} entries
+            </strong>
           </span>
 
-          <Flex gap="10px">
+          <Flex>
             <Button
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
