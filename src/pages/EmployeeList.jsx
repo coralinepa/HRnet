@@ -105,6 +105,12 @@ function EmployeeList() {
   const [pageSize, setPageSize] = useState(10);
   const columnHelper = createColumnHelper();
 
+  /*Ces useState permettent de :
+Appliquer des filtres spécifiques (columnFilters)
+Filtrer tous les champs (globalFilter)
+Trier les colonnes (sorting)
+Gérer le nombre de lignes affichées (pageSize)*/
+
   const columns = useMemo(() => {
     return [
       columnHelper.accessor("firstName", {
@@ -182,6 +188,10 @@ function EmployeeList() {
     ];
   }, [columnHelper]);
 
+  /*On utilise useMemo pour ne pas recalculer les colonnes à chaque rendu.
+Chaque colonne a un accessor (clé dans l'objet employé).
+Une colonne personnalisée avec des checkbox permet la sélection des lignes.*/
+
   const table = useReactTable({
     data,
     columns,
@@ -203,6 +213,11 @@ function EmployeeList() {
     getPaginationRowModel: getPaginationRowModel(),
     enableRowSelection: true,
   });
+
+  /*useReactTable() est le moteur du tableau.
+Il gère : tri, filtre, pagination, sélection.
+Les valeurs comme columnFilters et sorting sont liées aux useState pour réagir aux actions de l'utilisateur.
+*/
 
   return (
     <Panel>
@@ -327,3 +342,13 @@ function EmployeeList() {
 }
 
 export default EmployeeList;
+
+/*Élément	Fonction
+useEmployees()	Récupère les employés via contexte
+useState()	Gère les filtres, tri, pagination
+useMemo()	Mémorise la structure des colonnes
+useReactTable()	Génère toutes les fonctionnalités du tableau
+@tanstack/react-table	Puissante librairie pour les tableaux dynamiques
+styled-components	Gère les styles du tableau et de ses composants
+flexRender()	Rend le contenu dynamique (cellules, en-têtes, etc.)
+*/

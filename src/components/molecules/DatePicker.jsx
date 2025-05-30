@@ -45,6 +45,7 @@ function DatePicker({ title, selected, onChange, ...props }) {
     >
       <Calendar
         mode="single"
+        captionLayout="dropdown"
         selected={selected}
         onSelect={onChange}
         initialFocus
