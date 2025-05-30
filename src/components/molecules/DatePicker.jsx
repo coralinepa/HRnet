@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { format } from "date-fns";
@@ -27,6 +28,14 @@ const IconWrapper = styled.span`
 `;
 
 function DatePicker({ title, selected, onChange, ...props }) {
+  const [month, setMonth] = useState(selected ?? new Date());
+
+  useEffect(() => {
+    if (selected) {
+      setMonth(selected);
+    }
+  }, [selected]);
+
   return (
     <Popover
       trigger={
@@ -45,9 +54,11 @@ function DatePicker({ title, selected, onChange, ...props }) {
     >
       <Calendar
         mode="single"
-        captionLayout="dropdown"
         selected={selected}
         onSelect={onChange}
+        month={month}
+        onMonthChange={setMonth}
+        captionLayout="dropdown"
         initialFocus
         {...props}
       />
